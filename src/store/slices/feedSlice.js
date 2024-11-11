@@ -1,5 +1,5 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-
+import { collection, addDoc } from 'firebase/firestore';
 export const createPost = createAsyncThunk(
 "feed/createPost",
 async (post) => {
@@ -9,6 +9,8 @@ async (post) => {
         console.log("response after firebase store", response)
 
 
-    }catch(e){}
+    }catch(e){
+        console.log("error", e)
+    }
 }
 )
