@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import { useDispatch } from 'react-redux';
+import { createPosts } from '../../store/slices/feedSlice';
 export default function CreatePost() {
  
     const [title, setTitle] = useState("");
@@ -15,7 +16,7 @@ export default function CreatePost() {
             imageURL : "https://via.placeholder.com/150"
         }
 
-        dispatch (createPost(post))
+        dispatch (createPosts(post))
          
      
 

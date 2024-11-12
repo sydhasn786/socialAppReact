@@ -1,3 +1,4 @@
+import CreatePost from "../../components/createPost/CreatePost"
 import ProductList from "../../components/productList/ProductList"
 
 export default function Home() {
@@ -7,7 +8,8 @@ export default function Home() {
       
             <h1>List of products</h1>
       
-         <ProductList/>
+         {/* <ProductList/> */}
+         {CreatePost}
         </>
     )
 }

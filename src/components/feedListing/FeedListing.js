@@ -1,12 +1,34 @@
 import React from 'react'
 import Button from '../button/Button'
+import { useSelector, useDispatch } from 'react-redux';
+import { getPosts } from '../../store/slices/feedSlice';
+
 
 export default function FeedListing() {
-    const handleClick = () =>{console.log("clicked")};
-  return (
+   const dispatch = useDispatch()
+    const handleClick = () =>{
+      
+      console.log("clicked")
+      dispatch(getPosts())
+    
+    };
+    const feed = useSelector(store => store.feedSlice.feed)
+ 
+    return (
     <div>
         <h1>Feed Listing</h1>
         <Button title = "Get Post" onClickHandler = {() => {handleClick()}}/>
+        {
+          feed?.map((post) => {
+            return (
+              <div key = {post?.id}>
+                <h3>{post?.title}</h3>
+                <p>{post?.description}</p>
+              </div>
+            )
+          })
+        }
+    
     </div>
   )
 } 
