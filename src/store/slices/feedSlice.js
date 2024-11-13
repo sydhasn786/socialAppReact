@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { collection,doc, deleteDoc,addDoc, getDocs , onSnapshot} from 'firebase/firestore';
+import { collection,doc,updateDoc, deleteDoc,addDoc, getDocs , onSnapshot} from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 // Fetch posts from Firestore
@@ -43,9 +43,10 @@ export const updatePost = createAsyncThunk (
   "feed/updatePost",
   async (post) =>{
     try{
-
+// setDoc is hard update.......... updateDoc is soft update
       const docRef = doc(db, "posts", post.id)
-      await docRef.set
+      await updateDoc(docRef,post)
+      return post
 
     }catch(e){
       console.error("Error updating post:", e);
@@ -85,11 +86,18 @@ const feedSlice = createSlice({
     feed: [],
     loading: false,
     error: null,
+    updatePost : null
   },
   reducers: {
     addFeed: (state, action) => {
       console.log('action in addFeed', action.payload);
     },
+    updateDocId:(state, action) =>{
+      console.log("action in updateDocId", action.payload)
+      let post = state.feed.filter((post)=> post.id === action.payload)
+      state.updatePost = post[0]
+    },
+   
   },
   extraReducers: (builder) => {
     builder
@@ -112,9 +120,18 @@ const feedSlice = createSlice({
       .addCase(deletePost.fulfilled, (state, action) => {
         state.feed = state.feed.filter((post) => post.id !== action.payload);
       })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.feed = state.feed.map((post) => {
+          if (post.id === action.payload.id) {
+            return action.payload;
+          }
+          return post;
+        })
+        state.updatePost = null
+      })
   },
 });
 
 
-export const { addFeed } = feedSlice.actions;
+export const { addFeed, updateDocId } = feedSlice.actions;
 export default feedSlice.reducer;

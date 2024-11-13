@@ -1,7 +1,7 @@
 import React ,{useEffect} from 'react'
 import Button from '../button/Button'
 import { useSelector, useDispatch } from 'react-redux';
-import { getPosts, deletePost } from '../../store/slices/feedSlice';
+import { getPosts, deletePost, updateDocId } from '../../store/slices/feedSlice';
 
 
 export default function FeedListing() {
@@ -23,6 +23,10 @@ console.log("Get Post Clicked delete", id)
 dispatch(deletePost(id))
     }
    
+    const handleUpdate = (id) =>{
+      console.log("Get Post Clicked update", id)
+      dispatch(updateDocId(id))
+    }
  
     return (
     <div>
@@ -35,6 +39,8 @@ dispatch(deletePost(id))
                 <h3>{post?.title}</h3>
                 <p>{post?.description}</p>
                 <button onClick={()=> handleDelete(post.id)}>Delete</button>
+                <button onClick={()=> handleUpdate(post.id)}>Update</button>
+             
               </div>
             )
           })
