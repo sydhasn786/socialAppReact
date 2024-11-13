@@ -2,11 +2,14 @@ import React,{useState, useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { createPosts, updatePost } from '../../store/slices/feedSlice';
 import Button from '../button/Button';
+import firebase from 'firebase/compat/app';
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage"
+import {storage} from '../../config/firebase'
 export default function CreatePost() {
  
     const [title, setTitle] = useState("");
     const [description,setDescription] = useState("")
-    
+    const [imageURL, setImageURL] = useState(null);
     const post = useSelector(store => store.feedSlice.updatePost)
   
     const dispatch = useDispatch()
@@ -26,7 +29,7 @@ export default function CreatePost() {
             title,
             description,
             createdAt: new Date(),
-            imageURL : "https://via.placeholder.com/150"
+            imageURL : "https://www.google.com/url?sa=i&url=https%3A%2F%2Flogos-world.net%2Fgoogle-photos-logo%2F&psig=AOvVaw0gMoAmeFoREC5g9WPWrCFx&ust=1731571418413000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPig9eXs2IkDFQAAAAAdAAAAABAE"
         }
 
         if (post){
@@ -39,9 +42,35 @@ export default function CreatePost() {
 
     }
 
-    const uploadImage = (e) =>{
-        console.log("Image", e.target.files[0]);
+    const uploadImage = async (e) =>{
 
+     try{
+
+        const file = e.target.files[0]
+        console.log("Image", file);
+       
+       const fileRef= ref(storage,'images/' + file.name)
+       const metadata = {
+        contentType : 'image/png'
+        };
+      
+      
+       
+       
+        const response = await  uploadBytes(storage,file, metadata)
+       
+       console.log("response", response)
+       
+        const url = await getDownloadURL(fileRef)
+
+        console.log("url",url)
+    
+
+     }catch(e){
+        console.log("error",e)
+
+     }
+      
     }
     return (
         <>
